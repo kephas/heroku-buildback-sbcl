@@ -14,7 +14,8 @@ QUICKLISP=$CACHE_DIR/quicklisp.lisp
 SBCLRC=$HOME/.sbclrc
 
 SBCL="sbcl --non-interactive"
-BUILD_SCRIPT=$BUILD_DIR/build-sbcl.lisp
+BUILD_SCRIPT=build-sbcl.lisp
+QL_LOCAL=$HOME/quicklisp/local-projects
 
 install() {
 	if [[ ! -f $SBCLRC ]]; then
@@ -24,13 +25,16 @@ install() {
 		mkdir -p $CACHE_DIR;
 		echo "-----> Installing Quicklisp"
 		curl --silent --output $QUICKLISP https://beta.quicklisp.org/quicklisp.lisp;
-		$SBCL --load $QUICKLISP --eval "(quicklisp-quickstart:install)" --eval "(ql:add-to-init-file)" | indent;
+		mkdir -p $QL_LOCAL
+		ln -s $BUILD_DIR $QL_LOCAL/
+		$SBCL --load $QUICKLISP --eval "(quicklisp-quickstart:install)" --eval "(ql:add-to-init-file)" --eval "(ql:register-local-projects)" | indent;
 	else
 		echo "-----> SBCL and Quicklisp already installed";
 	fi;
 }
 
 build() {
+	cd $BUILD_DIR;
 	echo "-----> Building server";
 	$SBCL --load $BUILD_SCRIPT;
 }
