@@ -1,0 +1,25 @@
+#!/bin/bash
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+
+
+QUICKLISP=$CACHE_DIR/quicklisp.lisp
+SBCLRC=$HOME/.sbclrc
+
+SBCL="sbcl --non-interactive"
+
+install() {
+	if [[ ! -f $SBCLRC ]]; then
+		echo "-----> Installing SBCL"
+		apt-get --yes --quiet install sbcl;
+
+		mkdir -p $CACHE_DIR;
+		echo "-----> Installing Quicklisp"
+		curl --silent --output $QUICKLISP https://beta.quicklisp.org/quicklisp.lisp;
+		$SBCL --load $QUICKLISP --eval "(quicklisp-quickstart:install)" --eval "(ql:add-to-init-file)";
+	else
+		echo "-----> SBCL and Quicklisp already installed";
+	fi;
+}
