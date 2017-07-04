@@ -4,6 +4,11 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
+indent() {
+  sed -u 's/^/       /'
+}
+
+
 
 QUICKLISP=$CACHE_DIR/quicklisp.lisp
 SBCLRC=$HOME/.sbclrc
@@ -14,12 +19,12 @@ BUILD_SCRIPT=$BUILD_DIR/build-sbcl.lisp
 install() {
 	if [[ ! -f $SBCLRC ]]; then
 		echo "-----> Installing SBCL"
-		apt-get --yes --quiet install sbcl;
+		apt-get --yes --quiet install sbcl | indent;
 
 		mkdir -p $CACHE_DIR;
 		echo "-----> Installing Quicklisp"
 		curl --silent --output $QUICKLISP https://beta.quicklisp.org/quicklisp.lisp;
-		$SBCL --load $QUICKLISP --eval "(quicklisp-quickstart:install)" --eval "(ql:add-to-init-file)";
+		$SBCL --load $QUICKLISP --eval "(quicklisp-quickstart:install)" --eval "(ql:add-to-init-file)" | indent;
 	else
 		echo "-----> SBCL and Quicklisp already installed";
 	fi;
@@ -29,3 +34,7 @@ build() {
 	echo "-----> Building server";
 	$SBCL --load $BUILD_SCRIPT;
 }
+
+
+install()
+build()
