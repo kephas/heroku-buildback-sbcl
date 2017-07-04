@@ -9,6 +9,7 @@ QUICKLISP=$CACHE_DIR/quicklisp.lisp
 SBCLRC=$HOME/.sbclrc
 
 SBCL="sbcl --non-interactive"
+BUILD_SCRIPT=$BUILD_DIR/build-sbcl.lisp
 
 install() {
 	if [[ ! -f $SBCLRC ]]; then
@@ -22,4 +23,9 @@ install() {
 	else
 		echo "-----> SBCL and Quicklisp already installed";
 	fi;
+}
+
+build() {
+	echo "-----> Building server";
+	$SBCL --load $BUILD_SCRIPT;
 }
