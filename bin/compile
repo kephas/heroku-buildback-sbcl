@@ -20,6 +20,7 @@ QL_LOCAL=$HOME/quicklisp/local-projects
 install() {
 	if [[ ! -f $SBCLRC ]]; then
 		echo "-----> Installing SBCL"
+		apt-get update | indent;
 		apt-get --yes --quiet install sbcl | indent;
 
 		mkdir -p $CACHE_DIR;
